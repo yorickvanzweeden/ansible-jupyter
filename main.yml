@@ -1,0 +1,46 @@
+---
+- hosts: "jupyter_servers"
+  become: true
+
+  pre_tasks:
+    - name: Ensure group exists
+      group:
+        name: "{{ ssh_user }}"
+        state: present
+
+    - name: Add the user
+      user:
+        name: "{{ ssh_user }}"
+        password: "{{ ssh_user_password | password_hash('sha512') }}"
+        groups: "sudo,{{ ssh_user }}"
+        state: present
+        shell: /bin/bash
+
+    - name: Copy .ssh folder
+      copy:
+        src: /root/.ssh/
+        dest: /home/{{ ssh_user }}/.ssh
+        mode: preserve
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+        remote_src: yes
+
+  tasks:
+    - name: "Install basic packages"
+      include_tasks: "tasks/packages.yml"
+
+  roles:
+    - role: jkglasbrenner.miniconda
+      miniconda_ver: "4.7.10"
+      miniconda_checksum: "md5:1c945f2b3335c7b2b15130b1b2dc5cf4"
+
+    - role: andrewrothstein.conda-env
+      conda_env_name: jupyter_env
+      conda_env_environment: environment.yml
+      conda_env_conda_dir: /opt/miniconda
+      conda_env_cleanup: True
+      conda_env_update_if_present: True
+      become_user: "{{ ssh_user }}"
+
+    - role: jupyter.setup
+      jupyter_password_sha: "{{ jupyter_password }}"

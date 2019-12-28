@@ -1,0 +1,4 @@
+---
+ssh_user: '##USER##'
+ssh_user_password: '##USER##'
+jupyter_password: '##HASHED PASSWORD FOR ACCESSING JUPYTER"'

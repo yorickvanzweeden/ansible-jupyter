@@ -1,0 +1,14 @@
+---
+- name: "Install common utilities"
+  apt:
+    name:
+      - "unattended-upgrades"
+      - "curl"
+      - "htop"
+      - "python3-apt"
+
+- name: "Update all packages"
+  apt:
+    upgrade: dist
+    update_cache: true
+    cache_valid_time: 3600

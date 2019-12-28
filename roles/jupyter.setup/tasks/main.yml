@@ -1,0 +1,34 @@
+---
+- fail:
+    msg: The default password has not been changed.
+  when: "jupyter_password_sha|string == 'sha1:bb042cb908bb:86c918841b709fc51edf712148d5fd008dd17c92'"
+
+- name: Copy jupyter.service to correct location
+  template:
+    src: jupyter.service.j2
+    dest: "/etc/systemd/system/jupyter.service"
+
+- name: Copy jupyter.sh to correct location
+  template:
+    src: jupyter_service.sh
+    dest: "/opt/jupyter_service.sh"
+    mode: a+x
+
+- name: Copy jupyter config to correct location
+  template:
+    src: jupyter_notebook_config.py.j2
+    dest: "/opt/jupyter_notebook_config.py"
+
+- name: Creates logging directory
+  file:
+    path: /var/log/jupyter
+    state: directory
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+
+- name: Start jupyter service
+  systemd:
+    name: jupyter.service
+    daemon_reload: yes
+    enabled: yes
+    state: restarted

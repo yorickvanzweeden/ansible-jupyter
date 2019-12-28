@@ -1,0 +1,32 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: miniconda
+  author: jkglasbrenner
+  description: Miniconda is the minimal version of Anaconda, a cross-platform Python distribution with a built-in environment and package manager.
+  license: MIT
+  min_ansible_version: 2.4
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - xenial
+        - trusty
+    - name: Debian
+      versions:
+        - stretch
+        - jessie
+    - name: Fedora
+      versions:
+        - 27
+    - name: EL
+      versions:
+        - 7
+        - 6
+  galaxy_tags:
+    - anaconda
+    - conda
+    - python
+    - virtualenv
+...
